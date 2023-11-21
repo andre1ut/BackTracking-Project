@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
+import Board from "../board/board";
 
 const Sudoku = () => {
 
@@ -76,8 +77,10 @@ const Sudoku = () => {
         <div>
             <input type="file" id="Form" ref={fileInput} onChange={handleFileChange} />
             {(data !== null && data?.predictions.length === 81) && (
-
-                <h1>Is ok</h1>
+                <div>
+                    <h1>Is ok</h1>
+                    <Board sudokuMatrixOrder={sudokuMatrixOrder} />
+                </div>
 
             )}
             {(data !== null && data?.predictions.length !== 81) && (
