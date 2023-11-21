@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef, useEffect, useState } from "react";
-import Sudoku from "../Matei/sudoku.jsx";
+import Sudoku from "../Matei/sudoku/sudoku.jsx";
 
 const App = () => {
 

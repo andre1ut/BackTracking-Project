@@ -5,6 +5,7 @@ const Sudoku = () => {
 
     const fileInput = useRef();
     const [data, setData] = useState(null);
+    const [sudokuMatrixOrder, setSudokuMatrixOrder] = useState([]);
 
     const handleFileChange = (event) => {
         if (event.target.files.length > 0) {
@@ -35,8 +36,28 @@ const Sudoku = () => {
                     },
                 })
                     .then(function (response) {
-                        console.log(response.data);
                         setData(response.data);
+                        if (response.data.predictions.length === 81) {
+                            response.data.predictions.sort((a, b) => a.y - b.y);
+
+                            let matrix = [];
+                            let row = [];
+                            for (let i = 0; i < response.data.predictions.length - 1; i++) {
+                                row.push(response.data.predictions[i]);
+
+                                if (response.data.predictions[i + 1].y - response.data.predictions[i].y > response.data.image.height / 10 - 10 || i === response.data.predictions.length - 2) {
+
+                                    row.sort((a, b) => a.x - b.x);
+                                    matrix.push(row);
+                                    row = [];
+                                }
+                            }
+                            matrix[8].push(response.data.predictions[80]);
+                            setSudokuMatrixOrder(matrix);
+
+                            console.log(matrix);
+                        }
+
                     })
                     .catch(function (error) {
                         console.log(error.message);
