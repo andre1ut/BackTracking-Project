@@ -70,3 +70,21 @@
     background-color: #f1f1f1;
 }
 
+
+.solve-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 260%;
+    font-weight: bold;
+    aspect-ratio: 1/1;
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid black; 
+    color: black;
+    background-color: greenyellow;
+    aspect-ratio: 4/3;
+}
