@@ -3,32 +3,27 @@ import './board.css';
 
 const isValid = (board, row, col, c) => {
     for (let i = 0; i < 9; i++) {
-        if (board[i][col].class === String(c))
-            return false;
-        if (board[row][i].class === String(c))
-            return false;
-        if (board[3 * Math.floor(row / 3) + Math.floor(i / 3)][3 * Math.floor(col / 3) + i % 3].class === String(c))
-            return false;
+        if (board[i][col] !== '0' && board[i][col] === c) return false;
+        if (board[row][i] !== '0' && board[row][i] === c) return false;
+        if (board[3 * Math.floor(row / 3) + Math.floor(i / 3)][3 * Math.floor(col / 3) + i % 3] !== '0' &&
+            board[3 * Math.floor(row / 3) + Math.floor(i / 3)][3 * Math.floor(col / 3) + i % 3] === c) return false;
     }
     return true;
 }
 
 function solve(board) {
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
-            if (board[i][j].class === '0') {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++)
+            if (board[i][j] === '0') {
                 for (let c = 1; c <= 9; c++) {
-                    if (isValid(board, i, j, c)) {
-                        board[i][j].class = c.toString();
-                        if (solve(board))
-                            return true;
-                        else
-                            board[i][j].class = '0';
+                    if (isValid(board, i, j, c.toString())) {
+                        board[i][j] = c.toString();
+                        if (solve(board)) return true;
+                        else board[i][j] = '0';
                     }
                 }
                 return false;
             }
-        }
     }
     return true;
 }
@@ -36,11 +31,27 @@ function solve(board) {
 
 
 const Board = ({ sudokuMatrixOrder }) => {
-    const [board, setBoard] = useState([]);
-    const [memoryMatrix, setMemoryMatrix] = useState(sudokuMatrixOrder);
+    const [board, setBoard] = useState([]);//The inputs (visual board)
+    const [memoryMatrix, setMemoryMatrix] = useState([]);//The matrix that we will use to solve the sudoku
+    useEffect(() => {
+        let matrix = [];
+        sudokuMatrixOrder.forEach((element, rowIndex) => {
+            let row = [];
+            element.forEach((item, i) => {
+                row.push(item.class);
+            });
+            matrix.push(row);
+        }
+        );
+        setMemoryMatrix(matrix);
+        // console.log("memory_matrix -> ", matrix);
+    }, []);//This useEffect will run only once, when the component is mounted and will set the memory_matrix state
+
+    useEffect(() => {
+        setBoard(translateBoard_fromMemory_toInputs(memoryMatrix));
+    }, [memoryMatrix]);
 
 
-  
 
     function translateBoard_fromMemory_toInputs(memory_matrix) {
         let matrix = [];
@@ -58,50 +69,42 @@ const Board = ({ sudokuMatrixOrder }) => {
                         type="text"
                         className={className.trim()} // Trim the className string
                         key={i}
-                        defaultValue={Number(item.class) !== 0 ? item.class : ''}
+                        value={Number(item) !== 0 ? item : ''}
                         onChange={e => {
                             const value = e.target.value;
-                            let newBoard = [...memoryMatrix]; // Create a new copy of memory_matrix
+                            let newBoard = memoryMatrix.map(arr => [...arr]); // Create a new deep copy of memory_matrix
                             if (value === '') {
-                                newBoard[rowIndex][i].class = '0'; // Set the class to 0 when the input is empty
+                                newBoard[rowIndex][i] = '0'; // Set the class to 0 when the input is empty
                             } else if (Number(value) >= 1 && Number(value) <= 9) {
-                                newBoard[rowIndex][i].class = value.toString();
+                                newBoard[rowIndex][i] = value.toString();
                             }
                             setMemoryMatrix(newBoard); // Update the state of memory_matrix
+                            console.log("memory_matrix_after_input_change -> ", newBoard);
                         }}
                     />
                 );
             }));
         });
+        console.log("Translated board: ", matrix);
         return matrix;
     }
 
     function solveSudoku() {
         if (memoryMatrix == null || memoryMatrix.length == 0)
             return;
-        let copyMatrix = JSON.parse(JSON.stringify(memoryMatrix))
-        console.log("memory_matrix -> ", memoryMatrix);
-        solve(copyMatrix);
-        setMemoryMatrix(copyMatrix);
-        console.log("copyMatrix -> ", copyMatrix);
-        //Everithing works here everythoing we need to do is display the board
-        setBoard(translateBoard_fromMemory_toInputs(copyMatrix));
+        let matrix = memoryMatrix.map(arr => [...arr]); // Create a deep copy of memoryMatrix
+        solve(matrix);
+        console.log("memory_matrix_before_solved -> ", memoryMatrix);
+        console.log("memory_matrix_after_solved -> ", matrix);
+        setMemoryMatrix(matrix);
+        setBoard(translateBoard_fromMemory_toInputs(matrix));
     }
-
-    useEffect(() => {
-        setBoard(translateBoard_fromMemory_toInputs(sudokuMatrixOrder))
-    }, [])
-
-    useEffect(() => {
-        setBoard(translateBoard_fromMemory_toInputs(memoryMatrix));
-    }, [memoryMatrix]);
-
 
 
     return (
         <>
             <div id="board">
-                {board}
+                {[...board]}
             </div>
             <button className='solve-btn' onClick={solveSudoku}>Solve</button>
         </>
