@@ -28,11 +28,40 @@ function solve(board) {
     return true;
 }
 
+function canBeSolved(board) {
+    if (board == null || board.length == 0)
+        return false;
+    for (let i = 0; i < 9; i++) {
+        let row = new Set(),
+            col = new Set(),
+            box = new Set();
 
+        for (let j = 0; j < 9; j++) {
+            let rowVal = board[i][j];
+            let colVal = board[j][i];
+            let boxVal = board[3 * Math.floor(i / 3) + Math.floor(j / 3)][3 * (i % 3) + (j % 3)];
+
+            if (rowVal !== '0') {
+                if (row.has(rowVal)) return false;
+                row.add(rowVal);
+            }
+            if (colVal !== '0') {
+                if (col.has(colVal)) return false;
+                col.add(colVal);
+            }
+            if (boxVal !== '0') {
+                if (box.has(boxVal)) return false;
+                box.add(boxVal);
+            }
+        }
+    }
+    return true;
+}
 
 const Board = ({ sudokuMatrixOrder }) => {
     const [board, setBoard] = useState([]);//The inputs (visual board)
     const [memoryMatrix, setMemoryMatrix] = useState([]);//The matrix that we will use to solve the sudoku
+    const [isSolvable, setIsSolvable] = useState(false);//The matrix that we will use to solve the sudoku
     useEffect(() => {
         let matrix = [];
         sudokuMatrixOrder.forEach((element, rowIndex) => {
@@ -47,8 +76,11 @@ const Board = ({ sudokuMatrixOrder }) => {
         // console.log("memory_matrix -> ", matrix);
     }, []);//This useEffect will run only once, when the component is mounted and will set the memory_matrix state
 
+
     useEffect(() => {
         setBoard(translateBoard_fromMemory_toInputs(memoryMatrix));
+        setIsSolvable(canBeSolved(memoryMatrix));
+        // console.log("isSolvable -> ", canBeSolved(memoryMatrix));
     }, [memoryMatrix]);
 
 
@@ -102,12 +134,12 @@ const Board = ({ sudokuMatrixOrder }) => {
 
 
     return (
-        <>
+        <div id="fullboard">
             <div id="board">
                 {[...board]}
             </div>
-            <button className='solve-btn' onClick={solveSudoku}>Solve</button>
-        </>
+            {isSolvable === true ? <button className='solve-btn' onClick={solveSudoku}>Solve</button> : <h1 className='error-msg'>The sudoku cannot be solved</h1>}
+        </div>
     );
 };
 
