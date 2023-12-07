@@ -89,7 +89,7 @@ bool solve(vector<vector<char>> &board)
 
 
 bool verboseSolve(vector<vector<char>> &board){
-    Sleep(0.001);
+    Sleep(0.01);
     {
         for (int i = 0; i < board.size(); i++)
         {
@@ -104,14 +104,14 @@ bool verboseSolve(vector<vector<char>> &board){
                             board[i][j] = c;
                             system("cls");
                             printBoard(board);
-                             Sleep(0.001);
+                             Sleep(0.01);
                             if (verboseSolve(board))
                                 return true;
                             else{
                                 board[i][j] = '.';
                                 system("cls");
                                 printBoard(board);
-                                Sleep(0.001);
+                                Sleep(0.01);
                             }
                         }
                     }

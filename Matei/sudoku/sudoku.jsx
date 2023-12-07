@@ -47,7 +47,7 @@ const Sudoku = () => {
                             for (let i = 0; i < response.data.predictions.length - 1; i++) {
                                 row.push(response.data.predictions[i]);
 
-                                if (response.data.predictions[i + 1].y - response.data.predictions[i].y > response.data.predictions[i].height-10 || i === response.data.predictions.length - 2) {
+                                if (response.data.predictions[i + 1].y - response.data.predictions[i].y > response.data.predictions[i].height - 10 || i === response.data.predictions.length - 2) {
 
                                     row.sort((a, b) => a.x - b.x);
                                     matrix.push(row);
