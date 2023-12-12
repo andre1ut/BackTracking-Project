@@ -8,4 +8,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['fsevents'],
   },
+  base: '/BackTracking-Project/',
 })
