@@ -19,7 +19,7 @@ html, body {
     align-items: center;
 }
 
-button {
+.special {
     width: 50vw;
     height: 100vh;
 }

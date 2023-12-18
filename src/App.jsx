@@ -43,7 +43,7 @@ class App extends Component {
                     <div className="parent">
                         <div> 
                             <center>
-                                <button onClick={ this.routeChangeMatei } type="button" className="btn btn-outline-primary">
+                                <button onClick={ this.routeChangeMatei } type="button" className="special btn btn-outline-primary">
                                     <h1>Matei Martin</h1>
                                 </button>
                             </center>
@@ -51,7 +51,7 @@ class App extends Component {
                         </div>
                         <div>
                             <center>
-                                <button onClick={ this.routeChangeAndrei }type="button" className="btn btn-outline-primary"><h1>Andrei Dumitru-Munteanu</h1></button>
+                                <button onClick={ this.routeChangeAndrei }type="button" className="special btn btn-outline-primary"><h1>Andrei Dumitru-Munteanu</h1></button>
                                 
                             </center>
                             <ParticlesBg type="tadpole" bg={true} />
