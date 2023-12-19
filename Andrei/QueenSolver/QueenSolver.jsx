@@ -3,8 +3,17 @@ import React, { useState, useEffect } from 'react';
 const QueenSolver = ({ n }) => {
   const [solutions, setSolutions] = useState([]);
   const [currentBoard, setCurrentBoard] = useState([]);
+  
+  const [isRunning, setIsRunning] = useState(false)
 
   useEffect(() => {
+    if (isRunning)
+      return;
+    
+    setIsRunning(true);
+
+    console.log(`USE EFFECT ${n}`)
+
     const isSafe = (board, row, col) => {
       for (let i = 0; i < row; i++) {
         if (board[i][col] === 'Q') return false;
@@ -18,17 +27,35 @@ const QueenSolver = ({ n }) => {
       for (let i = 0; i < solution1.length; i++) {
         for (let j = 0; j < solution1[i].length; j++) {
           if (solution1[i][j] !== solution2[i][j]) {
+            console.log(`BBBBBBBBBB ${solution1[i][j]} ${solution2[i][j]}`);
             return false;
           }
         }
       }
+
+      console.log("AAAAAAAA");
+
       return true;
     };
 
     const solveNQueens = async (board, row) => {
       if (row === n) {
         const solution = board.map(row => row.slice());
-        if (!solutions.some(existingSolution => isSameSolution(existingSolution, solution))) {
+
+        // solutions.some(existingSolution => isSameSolution(existingSolution, solution));
+        let original = true;
+        for (sol in solutions) {
+          let test = !isSameSolution(sol, solution);
+          console.log(`${test} IS SAME: ${sol} ${solution}`)
+
+          if (test) {
+            original = false;
+            break;
+          }
+        }
+
+        if (original) {
+          console.log(`added sol: ${solution}`)
           setSolutions(prevSolutions => [...prevSolutions, solution]);
         }
         return;
@@ -49,7 +76,13 @@ const QueenSolver = ({ n }) => {
 
     const initialBoard = Array.from({ length: n }, () => Array(n).fill('.'));
     setCurrentBoard(initialBoard.map(row => row.slice()));
-    solveNQueens(initialBoard, 0);
+    
+    const runSolve = async () => {
+      await solveNQueens(initialBoard, 0);
+      setIsRunning(true);
+    }
+
+    runSolve();
 
     // Cleanup function to clear solutions when unmounting
     return () => {
