@@ -1,0 +1,25 @@
+.chessboard {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chessboard-row {
+    display: flex;
+  }
+  
+  .chessboard-cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .queen {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+  }
+  
